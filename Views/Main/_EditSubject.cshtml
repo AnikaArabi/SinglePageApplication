@@ -1,0 +1,34 @@
+﻿@model Subject
+
+
+
+<form id="f" name="f" data-db-type="subject" data-db-action="edit" data-controller-action="EditSubject">
+    <input type="hidden" asp-for="SubjectId" />
+    <div class="form-group row mb-1">
+        <label asp-for="SubjectName" class="col-form-label col-3"></label>
+        <div class="col-9">
+            <input asp-for="SubjectName" class="form-control" />
+            <span asp-validation-for="SubjectName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="Title" class="control-label col-3"></label>
+        <div class="col-9">
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="TotalHour" class="control-label col-3"></label>
+        <div class="col-9">
+            <input asp-for="TotalHour" class="form-control col-2" />
+            <span asp-validation-for="TotalHour" class="text-danger"></span>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Teacher>
+@{
+    int? id = (int?)ViewData["id"];
+    
+}
+<table class="table table-bordered table-striped table-success" id="teacherTable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeacherName)
+            </th>
+            <th>
+                Subject Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.TeacherType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+         @foreach (var item in Model)
+        {
+            <tr id="teacher_tr_@item.TeacherId" class="@(id.HasValue && id == item.TeacherId ? "bg-info": "")">
+                <td><button type="button" class="btn btn-sm select @(id.HasValue && id == item.TeacherId ? "disabled": "")" data-teacher-id="@item.TeacherId" >Select</button></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeacherName)
+                </td>
+                <td>
+                   @item.Subject?.SubjectName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=> item.TeacherType)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="teacher" data-db-action="edit" data-teacher-id="@item.TeacherId" data-controller-action="EditTeacher"><i class="bi bi-pencil"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="teacher" data-db-action="delete" data-teacher-id="@item.TeacherId" data-controller-action="DeleteTeacher"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

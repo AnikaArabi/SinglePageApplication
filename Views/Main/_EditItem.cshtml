@@ -1,0 +1,20 @@
+﻿@model TeacherStudent
+
+<div class="form-group row mb-1">
+    
+    <label asp-for="StudentId" class="col-form-label col-form-label-sm col-2"></label>
+    <div class="col-4">
+        <select asp-for="StudentId" class="form-select" asp-items="@(new SelectList(ViewData["Students"] as IEnumerable<Student>, "StudentId", "StudentName"))">
+            <option value="" selected>Select one</option>
+        </select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
+    </div>
+    <label asp-for="Fee" class="col-form-label col-form-label-sm col-2"></label>
+    <div class="col-3">
+        <input type="number" min="1" asp-for="Fee" class="form-control form-control-sm" >
+        <span asp-validation-for="Fee" class="text-danger"></span>
+    </div>
+    <div class="col-1">
+        <button  type="button" class="btn btn-sm delts-edit"><i class="bi bi-trash"></i></button>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Student>
+
+<table class="table table-bordered table-striped table-success" id="studentTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Student Name</th>
+                <th>Annual Cost</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var p in Model)
+            {
+            <tr id="student_tr_@p.StudentId">
+                    <td style="width:50px"><img src="~/Pictures/@p.Picture" style="width:40px" class="img-thumbnail rounded-circle" /></td>
+                    <td>@p.StudentName</td>
+                    <td>@p.AnnualCost.ToString("0.00")</td>
+                    <td>
+                    <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="student" data-db-action="edit" data-student-id="@p.StudentId" data-controller-action="EditStudent"><i class="bi bi-pencil"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="student" data-db-action="delete" data-student-id="@p.StudentId" data-controller-action="DeleteStudent"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

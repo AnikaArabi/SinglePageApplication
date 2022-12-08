@@ -1,0 +1,649 @@
+﻿@model DataViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row m-1">
+    <div class="col-6 border-end">
+        <h3>Subjects</h3>
+        <div class="d-flex justify-content-end mb-1">
+            <button class="btn btn-primary btn-sm" id="addsubject"><span class="bi bi-plus"></span> Add</button>
+        </div>
+        @await Html.PartialAsync("_SubjectTable", Model.Subjects)
+    </div>
+     <div class="col-6 border">
+        <h3>Students</h3>
+        <div class="d-flex justify-content-end mb-1">
+            <button class="btn btn-primary btn-sm" id="addstudent"><span class="bi bi-plus"></span> Add</button>
+        </div>
+        @await Html.PartialAsync("_StudentTable", Model.Students)
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 border-end">
+        <h3>Teachers</h3>
+        <div class="d-flex justify-content-end mb-1">
+            <button class="btn btn-primary btn-sm" id="addteacher"><span class="bi bi-plus"></span> Add</button>
+        </div>
+        @await Html.PartialAsync("_TeacherTable", Model.Teachers, new ViewDataDictionary(this.ViewData) { { "id", Model.SelectedTeacherId } })
+    </div>
+    <div class="col-6">
+        <h3>Students Information</h3>
+        <div class="d-flex justify-content-end mb-1">
+            <button class="btn btn-primary btn-sm" id="addts"><span class="bi bi-plus"></span> Add</button>
+        </div>
+        <div id="tsdiv">
+            @await Html.PartialAsync("_TeacherStudentTable", Model.TeacherStudents)
+        </div>
+    </div>
+</div>
+<!--Modal-->
+<div class="modal" tabindex="-1" id="modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="mtitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="mbody">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="save" class="btn btn-primary" form="f">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" id="delModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Confirm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure to delete this item?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deleteItem">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Toast-->
+<div class="position-absolute bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="toastNotice" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto" id="toasthead">Bootstrap</strong>
+
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastbody">
+            Hello, world! This is a toast message.
+        </div>
+    </div>
+</div>
+@section styles
+    {
+        <link rel="stylesheet" href="~/libs/picker/css/bootstrap-datepicker.standalone.css" />
+}
+    @section scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+        <script src="~/libs/picker/js/bootstrap-datepicker.js"></script>
+        <script>
+            var myModal = new bootstrap.Modal(document.getElementById('modal'));
+            var delModal = new bootstrap.Modal(document.getElementById('delModal'));
+            var myAlert = document.getElementById('toastNotice');//select id of toast
+            var bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+            var itemToWorkWith;
+            $(() => {
+                $(".date").datepicker({
+                format: 'yyyy-mm-dd'
+                });
+
+                //Teacher select start
+
+                $(document).on("click", "button.select", function () {
+
+
+                    var TeacherId = $(this).data("teacher-id");
+                    console.log(teacherId)
+                    var previousSelected = $("tr.bg-info")
+                    previousSelected.removeClass("bg-info");
+                    previousSelected.find("button.btn").removeClass("disabled");
+                    $(this).closest("tr").addClass("bg-info");
+                    $(this).closest("tr").find("button.btn").addClass("disabled");
+                    $.ajax({
+                        type: "POST",
+                        url: "/Main/GetSelectedTeacherStudents/" + teacherId,
+                        success: r => {
+                            $("#tsdiv").html(r);
+                        }
+                    })
+                });
+                //teacher select end
+
+
+                //Delete item start
+                $(document).on('click', 'button.del', function () {
+                    itemToWorkWith = $(this);
+                    delModal.show();
+                });
+
+                $('#deleteItem').click(() => {
+                    delModal.hide();
+                    var dbType = itemToWorkWith.data("db-type");
+                    var dbAction = itemToWorkWith.data("db-action");
+                    var controllerAction = itemToWorkWith.data("controller-action");
+                    var id = itemToWorkWith.data(`${dbType}-id`);
+                    console.log(`${dbType} ${dbAction} ${controllerAction}`);
+                    console.log(id);
+                    console.log($(`#${dbType}_tr_${id}`))
+                    $(`#${dbType}_tr_${id}`).remove();
+                    if(dbType == 'teacherstudent'){
+                        var tid = itemToWorkWith.data("teacher-id");
+                        var sid = itemToWorkWith.data("student-id");
+                        $.ajax({
+                            type: 'POST',
+                            url: `/Main/${controllerAction}/?tid=${tid}&sid=${sid}`,
+                            
+                            success: r => {
+                                if (r.success == true) {
+                                    $("#toasthead").html("Success");
+                                    $("#toastbody").html(r.message);
+
+                                    bsAlert.show();
+                                    $(`#${dbType}_tr_${tid}_${sid}`).remove();
+                                }
+                                else {
+                                    $("#toasthead").html("Failed");
+                                    $("#toastbody").html(r.message);
+
+                                    bsAlert.show();
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: 'POST',
+                            url: `/Main/${controllerAction}/${id}`,
+                            success: r => {
+                                if (r.success == true) {
+                                    $("#toasthead").html("Success");
+                                    $("#toastbody").html(r.message);
+
+                                    bsAlert.show();
+                                    $(`#${dbType}_tr_${id}`).remove();
+                                }
+                                else {
+                                    $("#toasthead").html("Failed");
+                                    $("#toastbody").html(r.message);
+
+                                    bsAlert.show();
+                                }
+                            }
+                        });
+                    }
+                });
+                //Delete item end
+                //Edit action start
+                $(document).on('click', 'button.edit', function () {
+                    var dbType = $(this).data("db-type");
+                    var dbAction = $(this).data("db-action");
+                    var controllerAction = $(this).data("controller-action");
+                    var id = $(this).data(`${dbType}-id`);
+                    console.log(`${dbType} ${dbAction} ${controllerAction}`);
+                    if (dbType == 'teacherstudent') {
+                        var tid = $(this).data("teacher-id");
+                        var sid = $(this).data("student-id");
+                        $.ajax({
+                            type: "GET",
+                            url: `/Main/${controllerAction}/?tid=${tid}&sid=${sid}`,
+                            success: r => {
+                                $("#mbody").html(r);
+                                $("#mtitle").html(`Edit ${dbType}`);
+
+                                myModal.show();
+                                var f = $("#f");
+                                $.validator.unobtrusive.parse(f);
+                                if (dbType == 'teacher') {
+                                $(".date").datepicker({
+                                    format:'yyyy-mm-dd'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        $.ajax({
+                            type: "GET",
+                            url: `/Main/${controllerAction}/${id}`,
+                            success: r => {
+                                $("#mbody").html(r);
+                                $("#mtitle").html(`Edit ${dbType}`);
+
+                                myModal.show();
+                                var f = $("#f");
+                                $.validator.unobtrusive.parse(f);
+                                if (dbType == 'teacher') {
+                                    $(".date").datepicker({
+                                      format:'yyyy-mm-dd'
+                                     });
+                                }
+                            }
+
+                        });
+                    }
+                    
+                });
+
+                //Edit action end
+                //delete teacher student
+                $(document).on("click", "button.delts-insert", function () {
+                    if ($("button.delts-insert").length < 2) return;
+                    $(this).parent().parent().remove();
+                })
+                //delete teacher student
+                //Add Subject start
+                $("#addsubject").click(() => {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("CreateSubject", "Main")",
+                        success: r => {
+                            $("#mbody").html(r);
+                            $("#mtitle").html("Add Subject");
+
+                            myModal.show();
+                            var f = $("#f");
+                            console.log(f);
+                            $.validator.unobtrusive.parse(f);
+                        }
+
+                    });
+                });
+                //Add Subject end
+                //Add Teacher Student start
+                $("#addts").click(function () {
+                    var id = $('button.select.disabled').data("teacher-id")
+                    $.ajax({
+                        type: "GET",
+                        url: "/Main/CreateTeacherStudent/" + id,
+                        success: r => {
+                            $("#mbody").html(r);
+                            $("#mtitle").html("Add Teacher & Student");
+
+                            myModal.show();
+                            var f = $("#f");
+                            console.log(f);
+                            $.validator.unobtrusive.parse(f);
+                        }
+
+                    });
+                })
+                //Add Teacher Student end
+                //Add student start
+                $("#addstudent").click(() => {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("CreateStudent", "Main")",
+                        success: r => {
+                            $("#mbody").html(r);
+                            $("#mtitle").html("Add Student");
+
+                            myModal.show();
+                            var f = $("#f");
+                            console.log(f);
+                            $.validator.unobtrusive.parse(f);
+                        }
+                    });
+                   
+                });
+                //Add student end
+                //Add teacher start
+                $("#addteacher").click(() => {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("CreateTeacher", "Main")",
+                        success: r => {
+                            $("#mbody").html(r);
+                            $("#mtitle").html("Add Teacher");
+
+                            myModal.show();
+                            var f = $("#f");
+                            console.log(f);
+                            $.validator.unobtrusive.parse(f);
+                            $(".date").datepicker({
+                            format:'yyyy-mm-dd'
+                        });
+                        }
+
+                    });
+                });
+                //Add teacher end
+                //Save click start
+                $("#save").click(function () {
+                    var button = $(this);
+                    var isValid = $("#f").valid();                
+                    if (isValid == true) {
+                        var dbType = $("#f").data("db-type");
+                        var dbAction = $("#f").data("db-action");
+                        var controllerAction = $("#f").data("controller-action");
+                        console.log(`${dbType} ${dbAction} ${controllerAction}`);
+                        var data = createData(dbType, dbAction);
+
+                        if (dbType == "subject") {
+
+                            $.ajax({
+                                url: `/Main/${controllerAction}`,
+                                type: "POST",
+                                data: data,
+                                dataType: "json",
+                                success: r => {
+                                    if (dbAction == "insert") {
+                                        $("#toasthead").html("Success");
+                                        $("#toastbody").html("Data inserted successfully");
+                                        myModal.hide();
+                                        bsAlert.show();
+                                        addToTable(dbType, r);
+
+                                    }
+                                    if (dbAction == "edit") {
+                                        $("#toasthead").html("Success");
+                                        $("#toastbody").html("Data saved successfully");
+                                        myModal.hide();
+                                        bsAlert.show();
+                                        replaceRow(dbType, `subject_tr_${r.subjectId}`, r);
+
+                                    }
+
+                                },
+                                error: function (err) {
+                                    alert(err.statusText);
+                                    $("#toasthead").html("Failed");
+                                    $("#toastbody").html("Failed to insert data");
+
+                                    bsAlert.show();
+                                }
+                            });
+                        }
+                        if (dbType == "student") {
+                            $.ajax({
+                                url: `/Main/${controllerAction}`,
+                                type: "POST",
+                                contentType: false, // Not to set any content header
+                                processData: false, // Not to process data
+                                data: data,
+                                success: function (result) {
+                                    console.log(result);
+                                    if (dbAction == "insert") {
+                                        $("#toastheader").html("Success");
+                                        $("#toastbody").html("Data inserted successfully");
+                                        bsAlert.show();
+                                        if (dbAction == 'insert') addToTable(dbType, result);
+
+                                    }
+                                    if (dbAction == "edit") {
+                                        $("#toasthead").html("Success");
+                                        $("#toastbody").html("Data saved successfully");
+                                        myModal.hide();
+                                        bsAlert.show();
+                                        replaceRow(dbType, `student_tr_${result.studentId}`, result);
+
+                                    }
+                                    myModal.hide();
+                                },
+                                error: function (err) {
+                                    alert(err.statusText);
+                                    $("#toasthead").html("Failed");
+                                    $("#toastbody").html("Failed to insert data");
+                                    bsAlert.show();
+                                }
+                            });
+                        }
+                        if (dbType == "teacher") {
+                            var isValid = $("#f").valid();
+                            console.log(isValid)
+                            if (isValid == true) {
+                                var dbType = $("#f").data("db-type");
+                                var dbAction = $("#f").data("db-action");
+                                var controllerAction = $("#f").data("controller-action");
+                                console.log(`${dbType} ${dbAction} ${controllerAction}`);
+                                var data = $("#f").serialize();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: `/Main/${controllerAction}`,
+                                    data: data,
+                                    success: r => {
+                                        console.log(r);
+                                        $("#toasthead").html("Success");
+                                        $("#toastbody").html("Data inserted successfully");
+                                        myModal.hide();
+                                        bsAlert.show();
+                                        if (dbAction == 'insert') addToTable(dbType, r);
+                                        if (dbAction == "edit") {
+                                            $("#toasthead").html("Success");
+                                            $("#toastbody").html("Data saved successfully");
+                                            myModal.hide();
+                                            bsAlert.show();
+                                            console.log( `teacher_tr_${r.teacherId}`);
+                                            replaceRow(dbType, `teacher_tr_${r.teacherId}`, r);
+
+                                        }
+
+                                    }
+                                });
+
+
+
+                            }
+                        }
+                        if (dbType = "teacherstudent") {
+                            var isValid = $("#f").valid();
+                            console.log(isValid)
+                            if (isValid == true) {
+                                var dbType = $("#f").data("db-type");
+                                var dbAction = $("#f").data("db-action");
+                                var controllerAction = $("#f").data("controller-action");
+                                console.log(`${dbType} ${dbAction} ${controllerAction}`);
+                                var data = $("#f").serialize();
+                                $.ajax({
+                                    type: "POST",
+                                    url: `/Main/${controllerAction}`,
+                                    data: data,
+                                    success: r => {
+                                        console.log(r);
+                                        $("#toasthead").html("Success");
+                                        $("#toastbody").html("Data inserted successfully");
+                                        myModal.hide();
+                                        bsAlert.show();
+                                        if (dbAction == 'insert') addToTable(dbType, r);
+                                        if (dbAction == "edit") {
+                                            $("#toasthead").html("Success");
+                                            $("#toastbody").html("Data saved successfully");
+                                            myModal.hide();
+                                            bsAlert.show();
+                                            replaceRow(dbType, `teacherstudent_tr_${r.teacherId}_${r.studentId}`, r);
+
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+
+                });
+                //Save click end
+                //Add more order item start
+                $(document).on("click", "button#addItemForm", () => {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Main/CreateItem',
+                        success: r => {
+
+                            $("div#items").append(r);
+
+                        }
+                    })
+                });
+                
+            });
+            //Add more order item end
+            //Function form data builder start
+            function createData(dbType, dbAction) {
+                if (dbType == "subject") {
+                    var obj = {
+                        CustomerName: $("#SubjectName").val(),
+                        Address: $("#Title").val(),
+                        Email: $("#TotalHour").val()
+                    };
+                    if (dbAction != 'insert') obj.SubjectId = $("#SubjectId").val();
+                    return obj;
+                }
+
+                if (dbType == "student") {
+                    var formData = new FormData();
+                    if (dbAction != 'insert') formData.append("StudentId", $("#StudentId").val());
+                    formData.append("StudentName", $("#StudentName").val());
+                    formData.append("AnnualCost", $("#AnnualCost").val());
+                    formData.append("Picture", document.getElementById("Picture").files[0]);
+                    return formData;
+                };
+
+            }
+            //Function replace row start
+            function replaceRow(dbType, rowid, r) {
+                
+                if (dbType == 'subject') {
+                    $(`#${rowid}`).html(` <td>${r.subjectName}</td>
+                                          <td>${r.title}</td>
+                                          <td>${r.totalHour}</td>
+                                          <td>
+                                            <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="subject"  data-db-action="edit" data-subject-id="${r.subjectId}" data-controller-action="EditSubject"><i class="bi bi-pencil"></i></button>
+                                            <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="subject"  data-db-action="delete" data-subject-id="${r.subjectId}" data-controller-action="DeleteSubject"><i class="bi bi-trash" ></i></button>
+                                          </td>`);
+                }
+                if (dbType == 'student') {
+                    console.log($(`#${rowid}`));
+                    $(`#${rowid}`).html(`<td style="width:50px"><img src="/Pictures/${r.picture}" style="width:40px" class="img-thumbnail rounded-circle" /></td>
+                                                                <td>${r.studentName}</td>
+                                                                <td>${r.annualCost.toFixed(2)}</td>
+                                                                <td>
+                                                                  <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="student" data-db-action="edit" data-student-id="${r.studentId}" data-controller-action="EditStudent"><i class="bi bi-pencil"></i></button>
+                                                                  <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="student" data-db-action="delete" data-student-id="${r.studentId}" data-controller-action="DeleteStudent"><i class="bi bi-trash"></i></button>
+                                                                </td>`);
+                }
+                if(dbType == 'teacher')
+            {
+                $(`#${rowid}`).html(`<td style="width:50px"><button type="button" class="btn btn-sm select" data-teacher-id="${r.teacherId}" >Select</button</td>
+                                                                
+                                                        <td>${r.teacherName}</td>
+                                                        <td>${r.subject.subjectName}</td>
+                                                        <td>${formatDate(new Date(r.dateOfBirth))}</td>
+                                                        <td>${getTeacherType(r.teacherType)}</td>
+                                                        <td>
+                                                                <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="teacher" data-db-action="edit" data-teacher-id="${r.teacherId}" data-controller-action="EditTeacher"><i class="bi bi-pencil"></i></button>
+                                                                <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="teacher" data-db-action="delete" data-teacher-id="${r.teacherId}" data-controller-action="DeleteTeacher"><i class="bi bi-trash"></i></button>
+                                                        </td>`);
+            }
+                if (dbType == 'teacherstudent') {
+                    console.log($(`#${rowid}`));
+                    $(`#${rowid}`).html( `<td><img src="/Pictures/${r.student.picture}" class="rounded-circle" style="width:40px" /></td>
+                                                     <td>${r.student.studentName}</td>
+                                                     <td>${r.student.annualCost}</td>            
+                                                     <td>${r.fee}</td>
+                                                     <td>
+                                                      <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="teacherstudent" data-db-action="edit"  data-teacher-id="${r.TeacherId}" data-student-id="${r.StudentId}" data-controller-action="EditTeacherStudent"><i class="bi bi-pencil"></i></button>
+                                                      <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="teacherstudent" data-db-action="delete" data-teacher-id="${r.TeacherId}" data-student-id="${r.StudentId}" data-controller-action="DeleteTeacherStudent"><i class="bi bi-trash"></i></button>
+                                                     </td>
+                                            `);
+
+                }
+            }
+            
+            //Function append to table start
+            function addToTable(dbType, r) {
+                if (dbType == "subject") {
+                    $(`#${dbType}Table tbody`).append(
+                        `<tr id="subject_tr_${r.subjectId}">
+                              <td>${r.subjectName}</td>
+                              <td>${r.title}</td>
+                               <td>${r.totalHour}</td>
+                                <td>
+                                 <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="subject"  data-db-action="edit" data-subject-id="${r.subjectId}" data-controller-action="EditSubject"><i class="bi bi-pencil"></i></button>
+                                 <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="subject"  data-db-action="delete" data-subject-id="${r.subjectId}" data-controller-action="DeleteSubject"><i class="bi bi-trash" ></i></button>
+                                </td>
+                          </tr>`);
+                }
+                if (dbType == "student") {
+                    $(`#${dbType}Table tbody`).append(
+                        `<tr id="student_tr_${r.studentId}">
+                                     <td style="width:50px"><img src="/Pictures/${r.picture}" style="width:40px" class="img-thumbnail rounded-circle" /></td>
+                                     <td>${r.studentName}</td>
+                                     <td>${r.annualCost}</td>
+                                     <td>
+                                         <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="student" data-db-action="edit" data-student-id="${r.studentId}" data-controller-action="EditStudent"><i class="bi bi-pencil"></i></button>
+                                         <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="student" data-db-action="delete" data-student-id="${r.studentId}" data-controller-action="DeleteStudent"><i class="bi bi-trash"></i></button>
+                                     </td>
+                                     </tr>`);
+                }
+                if (dbType == "teacher") {
+                    $(`#${dbType}Table tbody`).append(
+                        `<tr id="student_tr_${r.teacherId}">
+                                            <td style="width:50px"><button type="button" class="btn btn-sm select" data-teacher-id="${r.teacherId}" >Select</button</td>
+                                            
+                                            <td>${r.teacherName}</td>
+                                            <td>${r.subject.subjectName}</td>
+                                            <td>${formatDate(new Date(r.dateOfBirth))}</td>
+                                            <td>${getTeacherType(r.teacherType)}</td>
+                                            <td>
+                                            <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="teacher" data-db-action="edit" data-teacher-id="${r.teacherId}" data-controller-action="EditTeacher"><i class="bi bi-pencil"></i></button>
+                                            <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="teacher" data-db-action="delete" data-teacher-id="${r.teacherId}" data-controller-action="DeleteTeacher"><i class="bi bi-trash"></i></button>
+                                            </td>
+                                    </tr>`);
+
+                }
+                if (dbType == "teacherstudent") {
+                    $(`#${dbType}Table tbody`).append(
+                        `<tr id="teacherstudent_tr_${r.teacherId}_${r.studentId}">
+                                         <td><img src="/Pictures/${r.student.picture}" class="rounded-circle" style="width:40px" /></td>
+
+                                         <td>${r.student.studentName}</td>
+                                         <td>${r.student.annualCost}</td>
+                                         <td>${r.fee}</td>
+                                         <td>
+                                          <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="teacherstudent" data-db-action="edit"  data-teacher-id="${r.teacherId}" data-student-id="${r.studentId}" data-controller-action="EditTeacherStudent"><i class="bi bi-pencil"></i></button>
+                                          <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="teacherstudent" data-db-action="delete" data-teacher-id="${r.teacherId}" data-student-id="${r.studentId}" data-controller-action="DeleteTeacherStudent"><i class="bi bi-trash"></i></button>
+                                         </td>
+                                 </tr>`);
+
+                }
+            }
+            //Function append to table end
+            //Function date format
+            function formatDate(d) {
+                return [
+                    d.getFullYear(),
+                    (d.getMonth() + 1).toString().padStart(2, '0'),
+                    d.getDate().toString().padStart(2, '0')
+                ].join('-');
+            }
+            function getTeacherType(teacherType) {
+                //console.log(status);
+                if (teacherType == '1') return 'Senior';
+                if (teacherType == '2') return 'Junior';
+                if (teacherType == '3') return 'Assistent';
+                return '';
+
+            }
+
+        </script>
+}
+
+

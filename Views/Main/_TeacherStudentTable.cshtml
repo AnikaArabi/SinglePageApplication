@@ -1,0 +1,42 @@
+﻿@model IEnumerable<TeacherStudent>
+
+<table class="table table-bordered table-striped table-success" id="teacherstudentTable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+               Student Name
+            </th>
+            <th>
+                Annual Cost
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fee)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="@($"teacherstudent_tr_{@item.TeacherId}_{@item.StudentId}")">
+                <td>
+                    <img src="/Pictures/@item.Student?.Picture" class="rounded-circle" style="width:40px" />
+                </td>
+                <td>
+                    @item.Student?.StudentName
+                </td>
+                <td>
+                    @item.Student?.AnnualCost
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fee)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm rounded-circle edit" data-db-type="teacherstudent" data-db-action="edit" data-teacher-id="@item.TeacherId" data-student-id="@item.StudentId" data-controller-action="EditTeacherStudent"><i class="bi bi-pencil"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm rounded-circle del" data-db-type="teacherstudent" data-db-action="delete" data-teacher-id="@item.TeacherId" data-student-id="@item.StudentId" data-controller-action="DeleteTeacherStudent"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,34 @@
+﻿@model Teacher
+
+
+<form id="f" name="f" data-db-type="teacher" data-db-action="edit" data-controller-action="EditTeacher">
+    <input type="hidden" asp-for="TeacherType" value="@TeacherType.Senior" />
+    <div class="form-group row mb-1">
+        <label asp-for="SubjectId" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <select asp-for="SubjectId" class="form-select form-select-sm" asp-items="@(new SelectList(ViewData["Subjects"] as IEnumerable<Teacher>, "SubjectId", "SubjectName"))">
+                <option value="" selected>Select one</option>
+            </select>
+            <span asp-validation-for="SubjectId" class="text-danger"></span>
+        </div>
+    </div>
+     <div class="form-group row mb-1">
+        <label asp-for="TeacherName" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <input type="text" asp-for="TeacherName" class="form-control form-control-sm date">
+            <span asp-validation-for="TeacherName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row mb-1">
+        <label asp-for="DateOfBirth" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <input type="text" asp-for="DateOfBirth" class="form-control form-control-sm date">
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+    </div>
+    
+
+
+   
+</form>

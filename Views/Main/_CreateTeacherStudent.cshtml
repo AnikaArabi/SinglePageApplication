@@ -1,0 +1,27 @@
+﻿@model TeacherStudent
+<form id="f" name="f" data-db-type="teacherstudent" data-db-action="insert" data-controller-action="CreateTeacherStudent">
+    <input type="hidden" asp-for="TeacherId" value="@ViewData["TeacherId"]" />
+    <div class="form-group row mb-1">
+        <label asp-for="TeacherId" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            @ViewData["TeacherId"]
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="StudentId" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <select asp-for="StudentId" class="form-select form-select-sm added" asp-items="@(new SelectList(ViewData["Students"] as IEnumerable<Student>, "StudentId", "StudentName"))">
+                <option value="" selected>Select one</option>
+            </select>
+            <span asp-validation-for="StudentId" class="text-danger"></span>
+        </div>
+        <label asp-for="Fee" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-3">
+            <input type="number" min="1" asp-for="Fee" class="form-control form-control-sm added">
+            <span asp-validation-for="Fee" class="text-danger"></span>
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-sm delts-insert"><i class="bi bi-trash"></i></button>
+        </div>
+    </div>
+</form>

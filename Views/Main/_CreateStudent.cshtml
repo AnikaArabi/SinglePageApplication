@@ -1,0 +1,36 @@
+﻿@model StudentInputModel
+<form id="f" name="f" data-db-type="product" data-db-action="insert" data-controller-action="CreateStudent">
+
+    <div class="form-group row mb-1">
+        <label asp-for="StudentName" class="col-form-label col-2"></label>
+        <div class="col-10">
+            <input asp-for="StudentName" class="form-control" />
+            <span asp-validation-for="StudentName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="AnnualCost" class="control-label col-2"></label>
+        <div class="col-10">
+            <input asp-for="AnnualCost" class="form-control" />
+            <span asp-validation-for="AnnualCost" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="Picture" class="control-label col-2"></label>
+        <div class="col-10">
+            <input type="file" asp-for="Picture" class="form-control col-2" />
+            <span asp-validation-for="Picture" class="text-danger"></span>
+        </div>
+    </div>
+     <div class="form-group row mb-1">
+        <label asp-for="Continuing" class="control-label col-2"></label>
+        <div class="col-10">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="Continuing" checked>
+            </div>
+            <span asp-validation-for="Continuing" class="text-danger"></span>
+        </div>
+    </div>
+    
+   
+</form>

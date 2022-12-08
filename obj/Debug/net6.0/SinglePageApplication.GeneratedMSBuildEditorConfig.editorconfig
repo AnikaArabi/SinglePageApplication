@@ -1,0 +1,97 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = SinglePageApplication
+build_property.RootNamespace = SinglePageApplication
+build_property.ProjectDir = H:\1267947_Anika_Arabi\GitHub\SinglePageApplicationSolution\SinglePageApplication\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = H:\1267947_Anika_Arabi\GitHub\SinglePageApplicationSolution\SinglePageApplication
+build_property._RazorSourceGeneratorDebug = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_CreateItem.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfQ3JlYXRlSXRlbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_CreateStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfQ3JlYXRlU3R1ZGVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_CreateSubject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfQ3JlYXRlU3ViamVjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_CreateTeacher.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfQ3JlYXRlVGVhY2hlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_CreateTeacherStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfQ3JlYXRlVGVhY2hlclN0dWRlbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_EditItem.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfRWRpdEl0ZW0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_EditStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfRWRpdFN0dWRlbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_EditSubject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfRWRpdFN1YmplY3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_EditTeacher.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfRWRpdFRlYWNoZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_EditTeacherStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfRWRpdFRlYWNoZXJTdHVkZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_StudentTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfU3R1ZGVudFRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_SubjectTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfU3ViamVjdFRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_TeacherStudentTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfVGVhY2hlclN0dWRlbnRUYWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Main/_TeacherTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxfVGVhY2hlclRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[H:/1267947_Anika_Arabi/GitHub/SinglePageApplicationSolution/SinglePageApplication/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,40 @@
+﻿@model Teacher
+
+
+<form id="f" name="f" data-db-type="teacher" data-db-action="insert" data-controller-action="CreateTeacher">
+    <input type="hidden" asp-for="TeacherType" value="@TeacherType.Senior" />
+    <div class="form-group row mb-1">
+        <label asp-for="SubjectId" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <select asp-for="SubjectId" class="form-select form-select-sm" asp-items="@(new SelectList(ViewData["Subjects"] as IEnumerable<Subject>, "SubjectId", "SubjectName"))">
+                <option value="" selected>Select one</option>
+            </select>
+            <span asp-validation-for="SubjectId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="TeacherName" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <input  type="text" asp-for="TeacherName" class="form-control form-control-sm">
+            <span asp-validation-for="TeacherName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row mb-1">
+        <label asp-for="DateOfBirth" class="col-form-label col-form-label-sm col-2"></label>
+        <div class="col-4">
+            <input  type="text" asp-for="DateOfBirth" class="form-control form-control-sm date">
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <div id="items">
+        <div class="d-flex justify-content-between mb-1">
+            <h3>Students</h3>
+            <div><button type="button" class="btn btn-primary btn-sm" id="addItemForm"><i class="bi bi-plus"></i></button></div>
+        </div> 
+        @await Html.PartialAsync("_CreateItem", 
+        null,
+        new ViewDataDictionary(this.ViewData)
+         )
+    </div>
+</form>
